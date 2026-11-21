@@ -1,6 +1,6 @@
 // ---------- Variables that change over time ----------
 let angle = 0;            // current angle of the planet, in radians
-let angularSpeed = 0.03;  // radians added to the angle every frame
+let angularSpeed = 0.001;  // radians added to the angle every frame
 let isPaused = false;     // true when SPACE has paused the animation
 
 // ---------- Fixed settings ----------
@@ -64,7 +64,7 @@ function drawInfo(px, py, d) {
   textAlign(LEFT, TOP);
 
   let angleDegrees = (degrees(angle) % 360 + 360) % 360;
-  text("angle = " + nf(angleDegrees, 1, 1) + " deg", 10, 10);
+  text("angle = " + nf(angleDegrees, 1, 2) + " deg", 10, 10);
   text("x = " + nf(px, 1, 1) + "   y = " + nf(py, 1, 1), 10, 32);
   text("diameter = " + nf(d, 1, 1), 10, 54);
   text("speed = " + nf(angularSpeed, 1, 3) + " rad/frame", 10, 76);
@@ -81,14 +81,16 @@ function keyPressed() {
   if (key === ' ') {
     isPaused = !isPaused;
   } else if (keyCode === UP_ARROW) {
-    angularSpeed = angularSpeed + 0.005;
+    angularSpeed = angularSpeed + 0.0002;
   } else if (keyCode === DOWN_ARROW) {
-    angularSpeed = angularSpeed - 0.005;
+    angularSpeed = angularSpeed - 0.0002;
   } else if (key === 'r' || key === 'R') {
     angle = 0;
   }
-  return false; // stops the page from scrolling on SPACE/arrows
+
+  return false;
 }
+
 
 function mousePressed() {
   angularSpeed = -angularSpeed; // negative speed = opposite direction
