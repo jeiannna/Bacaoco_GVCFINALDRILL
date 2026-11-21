@@ -1,14 +1,12 @@
-// ---------- Variables that change over time ----------
-let angle = 0;            // current angle of the planet, in radians
-let angularSpeed = 0.03;  // radians added to the angle every frame
-let isPaused = false;     // true when SPACE has paused the animation
+// Variables that change over time 
+let angle = 0;          
+let angularSpeed = 0.03;  
+let isPaused = false;    
 
-// ---------- Fixed settings ----------
-let centerX = 300;        // x of the orbit center
-let centerY = 300;        // y of the orbit center
-let orbitRadius = 120;    // distance from center to planet (pixels)
-let baseDiameter = 30;    // planet size when sin(2 * angle) = 0
-let pulseAmount = 15;     // how much the diameter grows/shrinks
+let centerX = 300;        
+let orbitRadius = 120; 
+let baseDiameter = 30;  
+let pulseAmount = 15;  
 
 function setup() {
   let canvas = createCanvas(600, 600);
@@ -22,30 +20,22 @@ function draw() {
   if (!isPaused) {
     angle = angle + angularSpeed;
   }
-
-  // ----- MATH: circular motion with trigonometry -----
-  // cos gives the horizontal part of the circle, sin gives the vertical part.
-  // Multiply by the radius, then shift by the center.
+  
   let planetX = centerX + orbitRadius * cos(angle);
   let planetY = centerY + orbitRadius * sin(angle);
 
-  // ----- MATH: size pulses with a sine wave -----
-  // sin() swings between -1 and 1, so the diameter ranges from
-  // (baseDiameter - pulseAmount) to (baseDiameter + pulseAmount).
-  // 2 * angle makes it pulse twice per orbit.
   let planetDiameter = baseDiameter + pulseAmount * sin(2 * angle);
-
-  // Orbit path (a guide so the circle is visible)
+  
   noFill();
   stroke(80, 90, 130);
   ellipse(centerX, centerY, orbitRadius * 2);
 
-  // Center "sun"
+  //sun
   noStroke();
   fill(255, 200, 60);
   ellipse(centerX, centerY, 40);
 
-  // Line from the sun to the planet (this is the radius)
+  // Line from the sun to the planet
   stroke(150);
   line(centerX, centerY, planetX, planetY);
 
@@ -57,7 +47,6 @@ function draw() {
   drawInfo(planetX, planetY, planetDiameter);
 }
 
-// Shows the live numbers (useful for the hand calculation) and the controls
 function drawInfo(px, py, d) {
   fill(255);
   textSize(16);
@@ -76,7 +65,7 @@ function drawInfo(px, py, d) {
   text("R: reset angle", 10, 568);
 }
 
-// ---------- Controls ----------
+//  Controls
 function keyPressed() {
   if (key === ' ') {
     isPaused = !isPaused;
