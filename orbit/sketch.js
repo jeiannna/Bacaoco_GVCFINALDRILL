@@ -1,6 +1,6 @@
 // ---------- Variables that change over time ----------
 let angle = 0;            // current angle of the planet, in radians
-let angularSpeed = 0.001;  // radians added to the angle every frame
+let angularSpeed = 0.03;  // radians added to the angle every frame
 let isPaused = false;     // true when SPACE has paused the animation
 
 // ---------- Fixed settings ----------
