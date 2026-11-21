@@ -1,15 +1,14 @@
-
- // ---------- Variables that change over time ----------
-let angle = 0;
-let angularSpeed = 0.001;
-let isPaused = false;
+// ---------- Variables that change over time ----------
+let angle = 0;            // current angle of the planet, in radians
+let angularSpeed = 0.03;  // radians added to the angle every frame
+let isPaused = false;     // true when SPACE has paused the animation
 
 // ---------- Fixed settings ----------
-let centerX = 300;
-let centerY = 300;
-let orbitRadius = 120;
-let baseDiameter = 30;
-let pulseAmount = 15;
+let centerX = 300;        // x of the orbit center
+let centerY = 300;        // y of the orbit center
+let orbitRadius = 120;    // distance from center to planet (pixels)
+let baseDiameter = 30;    // planet size when sin(2 * angle) = 0
+let pulseAmount = 15;     // how much the diameter grows/shrinks
 
 function setup() {
   let canvas = createCanvas(600, 600);
@@ -19,59 +18,57 @@ function setup() {
 function draw() {
   background(20, 24, 40);
 
-  // Update the angle once per frame
-  // The angle stops changing when the animation is paused
+  // Update the angle once per frame (skipped while paused)
   if (!isPaused) {
     angle = angle + angularSpeed;
   }
 
-  // Calculate the planet's horizontal position using cosine
+  // ----- MATH: circular motion with trigonometry -----
+  // cos gives the horizontal part of the circle, sin gives the vertical part.
+  // Multiply by the radius, then shift by the center.
   let planetX = centerX + orbitRadius * cos(angle);
-
-  // Calculate the planet's vertical position using sine
   let planetY = centerY + orbitRadius * sin(angle);
 
-  // Calculate the planet's changing diameter using sine
+  // ----- MATH: size pulses with a sine wave -----
+  // sin() swings between -1 and 1, so the diameter ranges from
+  // (baseDiameter - pulseAmount) to (baseDiameter + pulseAmount).
+  // 2 * angle makes it pulse twice per orbit.
   let planetDiameter = baseDiameter + pulseAmount * sin(2 * angle);
 
-  // Draw the circular orbit path
+  // Orbit path (a guide so the circle is visible)
   noFill();
   stroke(80, 90, 130);
   ellipse(centerX, centerY, orbitRadius * 2);
 
-  // Draw the center sun
+  // Center "sun"
   noStroke();
   fill(255, 200, 60);
   ellipse(centerX, centerY, 40);
 
-  // Draw the line connecting the sun and planet
+  // Line from the sun to the planet (this is the radius)
   stroke(150);
   line(centerX, centerY, planetX, planetY);
 
-  // Draw the orbiting planet
+  // Planet
   noStroke();
   fill(80, 170, 255);
   ellipse(planetX, planetY, planetDiameter);
 
-  // Display the current mathematical values and controls
   drawInfo(planetX, planetY, planetDiameter);
 }
 
-// ---------- Display information on the canvas ----------
+// Shows the live numbers (useful for the hand calculation) and the controls
 function drawInfo(px, py, d) {
   fill(255);
   textSize(16);
   textAlign(LEFT, TOP);
 
-  // Convert the angle from radians to degrees
   let angleDegrees = (degrees(angle) % 360 + 360) % 360;
-
-  text("angle = " + nf(angleDegrees, 1, 2) + " deg", 10, 10);
+  text("angle = " + nf(angleDegrees, 1, 1) + " deg", 10, 10);
   text("x = " + nf(px, 1, 1) + "   y = " + nf(py, 1, 1), 10, 32);
   text("diameter = " + nf(d, 1, 1), 10, 54);
-  text("speed = " + nf(angularSpeed, 1, 4) + " rad/frame", 10, 76);
+  text("speed = " + nf(angularSpeed, 1, 3) + " rad/frame", 10, 76);
 
-  // Display keyboard and mouse instructions
   text("CONTROLS:", 10, 480);
   text("UP / DOWN arrows: change speed", 10, 502);
   text("SPACE: pause / resume", 10, 524);
@@ -79,26 +76,20 @@ function drawInfo(px, py, d) {
   text("R: reset angle", 10, 568);
 }
 
-// ---------- Keyboard controls ----------
+// ---------- Controls ----------
 function keyPressed() {
   if (key === ' ') {
     isPaused = !isPaused;
-
   } else if (keyCode === UP_ARROW) {
-    angularSpeed = angularSpeed + 0.0002;
-
+    angularSpeed = angularSpeed + 0.005;
   } else if (keyCode === DOWN_ARROW) {
-    angularSpeed = angularSpeed - 0.0002;
-
+    angularSpeed = angularSpeed - 0.005;
   } else if (key === 'r' || key === 'R') {
     angle = 0;
   }
-
-  return false;
+  return false; // stops the page from scrolling on SPACE/arrows
 }
 
-// ---------- Mouse control ----------
 function mousePressed() {
-  // Reverse the direction of the planet
-  angularSpeed = -angularSpeed;
+  angularSpeed = -angularSpeed; // negative speed = opposite direction
 }
