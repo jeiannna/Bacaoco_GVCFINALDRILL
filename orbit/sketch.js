@@ -1,9 +1,8 @@
-// ---------- Variables that change over time ----------
-let angle = 0;            // current angle of the planet, in radians
-let angularSpeed = 0.03;  // radians added to the angle every frame
-let isPaused = false;     // true when SPACE has paused the animation
 
-// ---------- Fixed settings ----------
+let angle = 0;           
+let angularSpeed = 0.03; 
+let isPaused = false;    
+
 let centerX = 300;        // x of the orbit center
 let centerY = 300;        // y of the orbit center
 let orbitRadius = 120;    // distance from center to planet (pixels)
@@ -18,29 +17,23 @@ function setup() {
 function draw() {
   background(20, 24, 40);
 
-  // Update the angle once per frame (skipped while paused)
   if (!isPaused) {
     angle = angle + angularSpeed;
   }
 
-  // ----- MATH: circular motion with trigonometry -----
-  // cos gives the horizontal part of the circle, sin gives the vertical part.
-  // Multiply by the radius, then shift by the center.
+
   let planetX = centerX + orbitRadius * cos(angle);
   let planetY = centerY + orbitRadius * sin(angle);
 
-  // ----- MATH: size pulses with a sine wave -----
-  // sin() swings between -1 and 1, so the diameter ranges from
-  // (baseDiameter - pulseAmount) to (baseDiameter + pulseAmount).
-  // 2 * angle makes it pulse twice per orbit.
+
   let planetDiameter = baseDiameter + pulseAmount * sin(2 * angle);
 
-  // Orbit path (a guide so the circle is visible)
+
   noFill();
   stroke(80, 90, 130);
   ellipse(centerX, centerY, orbitRadius * 2);
 
-  // Center "sun"
+  // sun
   noStroke();
   fill(255, 200, 60);
   ellipse(centerX, centerY, 40);
@@ -76,7 +69,7 @@ function drawInfo(px, py, d) {
   text("R: reset angle", 10, 568);
 }
 
-// ---------- Controls ----------
+// Controls
 function keyPressed() {
   if (key === ' ') {
     isPaused = !isPaused;
